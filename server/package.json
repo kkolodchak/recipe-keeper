@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.86.0",
     "cors": "^2.8.5",
@@ -18,5 +20,17 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "."
+    ],
+    "ext": "js,json",
+    "ignore": [
+      "node_modules/**",
+      "*.test.js",
+      "*.spec.js"
+    ],
+    "delay": "1000"
   }
 }
