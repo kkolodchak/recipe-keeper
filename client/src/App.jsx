@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
+import { ProtectedRoute } from './components/Layout/ProtectedRoute.jsx';
+import { Navbar } from './components/Layout/Navbar.jsx';
+import { Home } from './pages/Home.jsx';
+import { Login } from './components/Auth/Login.jsx';
+import { SignUp } from './components/Auth/SignUp.jsx';
+import { Dashboard } from './pages/Dashboard.jsx';
+import { RecipeDetailPage } from './pages/RecipeDetailPage.jsx';
+import { CreateRecipe } from './pages/CreateRecipe.jsx';
+import { EditRecipe } from './pages/EditRecipe.jsx';
+
+/**
+ * ProtectedLayout component that wraps protected routes with Navbar
+ */
+const ProtectedLayout = () => {
+  return (
+    <ProtectedRoute>
+      <Navbar />
+      <Outlet />
+    </ProtectedRoute>
+  );
+};
+
+/**
+ * PublicRoute component that redirects to dashboard if already logged in
+ */
+const PublicRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  // Show loading while checking auth state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-warm-50">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary-500 mx-auto mb-4" />
+          <p className="text-warm-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to dashboard if already logged in
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignUp />
+              </PublicRoute>
+            }
+          />
+
+          {/* Protected Routes with Navbar */}
+          <Route element={<ProtectedLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/recipes/:id" element={<RecipeDetailPage />} />
+            <Route path="/create" element={<CreateRecipe />} />
+            <Route path="/recipes/:id/edit" element={<EditRecipe />} />
+          </Route>
+
+          {/* Catch all - redirect to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
+

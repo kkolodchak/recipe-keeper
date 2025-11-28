@@ -102,9 +102,9 @@ export const Navbar = () => {
                 My Recipes
               </Link>
               <Link
-                to="/recipes/new"
+                to="/create"
                 className={`px-4 py-2 rounded-xl font-medium transition-colors flex items-center gap-2 ${
-                  isActive('/recipes/new')
+                  isActive('/create')
                     ? 'bg-primary-100 text-primary-700'
                     : 'text-warm-700 hover:bg-warm-100'
                 }`}
@@ -219,10 +219,10 @@ export const Navbar = () => {
               <span className="font-medium">My Recipes</span>
             </Link>
             <Link
-              to="/recipes/new"
+              to="/create"
               onClick={() => setIsMobileMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl transition-colors ${
-                isActive('/recipes/new')
+                isActive('/create')
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-warm-700 hover:bg-warm-100'
               }`}
