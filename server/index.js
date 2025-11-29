@@ -26,10 +26,27 @@ if (!process.env.SUPABASE_ANON_KEY && !process.env.SUPABASE_KEY) {
 // Create Express app
 const app = express();
 
-// Configure CORS to allow requests from Vite dev servers
+// Configure CORS for production and development
+const allowedOrigins = [
+  'http://localhost:5175',
+  'http://localhost:5173',
+  process.env.FRONTEND_URL || 'https://recipe-keeper.vercel.app'
+];
+
 app.use(cors({
-  origin: ['http://localhost:5176', 'http://localhost:5175', 'http://localhost:5173'],
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // JSON body parser middleware
@@ -66,10 +83,15 @@ app.use((req, res) => {
 // Get PORT from environment or use default
 const PORT = process.env.PORT || 5000;
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📍 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`📝 Recipes API: http://localhost:${PORT}/api/recipes`);
-});
+// Start server (only in development or when not on Vercel)
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📍 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`📝 Recipes API: http://localhost:${PORT}/api/recipes`);
+  });
+}
+
+// Export app for Vercel serverless functions
+export default app;
 
