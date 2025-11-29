@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
+import { ToastProvider } from './contexts/ToastContext.jsx';
 import { ProtectedRoute } from './components/Layout/ProtectedRoute.jsx';
 import { Navbar } from './components/Layout/Navbar.jsx';
 import { Home } from './pages/Home.jsx';
@@ -53,39 +54,41 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <SignUp />
-              </PublicRoute>
-            }
-          />
+        <ToastProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <SignUp />
+                </PublicRoute>
+              }
+            />
 
-          {/* Protected Routes with Navbar */}
-          <Route element={<ProtectedLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/recipes/:id" element={<RecipeDetailPage />} />
-            <Route path="/create" element={<CreateRecipe />} />
-            <Route path="/recipes/:id/edit" element={<EditRecipe />} />
-          </Route>
+            {/* Protected Routes with Navbar */}
+            <Route element={<ProtectedLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/create" element={<CreateRecipe />} />
+              <Route path="/recipes/:id/edit" element={<EditRecipe />} />
+              <Route path="/recipes/:id" element={<RecipeDetailPage />} />
+            </Route>
 
-          {/* Catch all - redirect to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Catch all - redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </ToastProvider>
       </BrowserRouter>
     </AuthProvider>
   );

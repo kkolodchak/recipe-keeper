@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { useToast } from '../../contexts/ToastContext.jsx';
 
 export const Login = () => {
   const navigate = useNavigate();
   const { signIn, loading: authLoading } = useAuth();
+  const { showToast } = useToast();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -62,14 +64,21 @@ export const Login = () => {
       const { error } = await signIn(email, password);
 
       if (error) {
-        setSubmitError(error.message || 'Failed to sign in. Please check your credentials.');
+        const errorMessage = error.message || 'Failed to sign in. Please check your credentials.';
+        setSubmitError(errorMessage);
+        showToast(errorMessage, 'error');
         return;
       }
+
+      // Show success toast
+      showToast('Successfully signed in!', 'success');
 
       // Navigate to dashboard on success
       navigate('/dashboard');
     } catch (error) {
-      setSubmitError(error.message || 'An unexpected error occurred. Please try again.');
+      const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
+      setSubmitError(errorMessage);
+      showToast(errorMessage, 'error');
     } finally {
       setIsSubmitting(false);
     }

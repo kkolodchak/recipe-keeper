@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Filter, Loader2 } from 'lucide-react';
 import { fetchRecipes } from '../services/api.js';
+import { useToast } from '../contexts/ToastContext.jsx';
 import { RecipeCard } from '../components/Recipe/RecipeCard.jsx';
+import { RecipeCardSkeleton } from '../components/Recipe/RecipeCardSkeleton.jsx';
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,9 @@ export const Dashboard = () => {
         setRecipes(data || []);
       } catch (err) {
         console.error('Error fetching recipes:', err);
-        setError(err.message || 'Failed to load recipes');
+        const errorMessage = err.message || 'Failed to load recipes';
+        setError(errorMessage);
+        showToast(errorMessage, 'error');
       } finally {
         setLoading(false);
       }
@@ -58,21 +63,7 @@ export const Dashboard = () => {
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {[...Array(8)].map((_, index) => (
-        <div
-          key={index}
-          className="bg-white rounded-xl shadow-soft border border-warm-200 overflow-hidden animate-pulse"
-        >
-          <div className="w-full aspect-video bg-warm-200"></div>
-          <div className="p-5 space-y-3">
-            <div className="h-6 bg-warm-200 rounded w-3/4"></div>
-            <div className="h-4 bg-warm-200 rounded w-full"></div>
-            <div className="h-4 bg-warm-200 rounded w-2/3"></div>
-            <div className="flex gap-4 mt-4">
-              <div className="h-4 bg-warm-200 rounded w-16"></div>
-              <div className="h-4 bg-warm-200 rounded w-16"></div>
-            </div>
-          </div>
-        </div>
+        <RecipeCardSkeleton key={index} />
       ))}
     </div>
   );

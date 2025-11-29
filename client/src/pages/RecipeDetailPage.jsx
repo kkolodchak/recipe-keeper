@@ -3,18 +3,19 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { fetchRecipeById, deleteRecipe } from '../services/api.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { useToast } from '../contexts/ToastContext.jsx';
 import { RecipeDetail } from '../components/Recipe/RecipeDetail.jsx';
 
 export const RecipeDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [toast, setToast] = useState(null);
 
   // Fetch recipe on mount
   useEffect(() => {
@@ -32,7 +33,9 @@ export const RecipeDetailPage = () => {
         setRecipe(data);
       } catch (err) {
         console.error('Error fetching recipe:', err);
-        setError(err.message || 'Failed to load recipe');
+        const errorMessage = err.message || 'Failed to load recipe';
+        setError(errorMessage);
+        showToast(errorMessage, 'error');
       } finally {
         setLoading(false);
       }
@@ -62,10 +65,7 @@ export const RecipeDetailPage = () => {
       await deleteRecipe(recipeId);
       
       // Show success toast
-      setToast({
-        type: 'success',
-        message: 'Recipe deleted successfully',
-      });
+      showToast('Recipe deleted successfully', 'success');
 
       // Navigate to dashboard after a short delay
       setTimeout(() => {
@@ -73,31 +73,11 @@ export const RecipeDetailPage = () => {
       }, 1500);
     } catch (err) {
       console.error('Error deleting recipe:', err);
-      setToast({
-        type: 'error',
-        message: err.message || 'Failed to delete recipe',
-      });
+      showToast(err.message || 'Failed to delete recipe', 'error');
     } finally {
       setIsDeleting(false);
     }
   };
-
-  /**
-   * Close toast
-   */
-  const closeToast = () => {
-    setToast(null);
-  };
-
-  // Auto-close toast after 3 seconds
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => {
-        closeToast();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
 
   // Loading state
   if (loading) {
@@ -136,63 +116,6 @@ export const RecipeDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-warm-50">
-      {/* Toast Notification */}
-      {toast && (
-        <div className="fixed top-4 right-4 z-50 animate-slide-in">
-          <div
-            className={`rounded-xl shadow-medium p-4 flex items-center gap-3 min-w-[300px] ${
-              toast.type === 'success'
-                ? 'bg-fresh-50 border border-fresh-200'
-                : 'bg-red-50 border border-red-200'
-            }`}
-          >
-            <div
-              className={`flex-shrink-0 ${
-                toast.type === 'success' ? 'text-fresh-600' : 'text-red-600'
-              }`}
-            >
-              {toast.type === 'success' ? (
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              ) : (
-                <AlertCircle className="h-5 w-5" />
-              )}
-            </div>
-            <p
-              className={`flex-1 text-sm font-medium ${
-                toast.type === 'success' ? 'text-fresh-900' : 'text-red-900'
-              }`}
-            >
-              {toast.message}
-            </p>
-            <button
-              onClick={closeToast}
-              className="flex-shrink-0 text-warm-400 hover:text-warm-600"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Recipe Detail Component */}
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <RecipeDetail

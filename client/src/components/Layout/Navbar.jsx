@@ -183,10 +183,10 @@ export const Navbar = () => {
               <span className="font-medium">My Recipes</span>
             </Link>
             <Link
-              to="/recipes/new"
+              to="/create"
               onClick={() => setIsMobileMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl transition-colors ${
-                isActive('/recipes/new')
+                isActive('/create')
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-warm-700 hover:bg-warm-100'
               }`}
@@ -197,7 +197,7 @@ export const Navbar = () => {
           </div>
 
           {/* Mobile User Section */}
-          <div className="border-t border-warm-200 p-4">
+          <div className="border-t border-warm-200 p-4 mb-[60px]">
             <div className="mb-3 px-4">
               <p className="text-sm font-medium text-warm-900">{userEmail}</p>
             </div>

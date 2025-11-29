@@ -183,14 +183,15 @@ export const AuthProvider = ({ children }) => {
         throw error;
       }
 
-      setSession(null);
-      setUser(null);
+      // Don't set loading to false here - let onAuthStateChange handle it
+      // This ensures the loading state persists until the auth state change is confirmed
+      // The onAuthStateChange listener will update user, session, and loading states
       return { error: null };
     } catch (error) {
       console.error('Error signing out:', error);
-      return { error };
-    } finally {
+      // Only set loading to false on error, otherwise let onAuthStateChange handle it
       setLoading(false);
+      return { error };
     }
   }, []);
 
