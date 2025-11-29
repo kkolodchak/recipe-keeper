@@ -1,36 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, User, LogOut, Plus, Book, Home } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { UserMenu } from './UserMenu.jsx';
 
 export const Navbar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const userMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
-
-  // Close user menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-        setIsUserMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -45,12 +29,22 @@ export const Navbar = () => {
   }, [isMobileMenuOpen]);
 
   /**
-   * Handle logout
+   * Handle logout (for mobile menu)
+   * ProtectedRoute will automatically redirect to /login when user becomes null
    */
   const handleLogout = async () => {
-    await signOut();
-    setIsUserMenuOpen(false);
-    navigate('/login');
+    try {
+      setIsMobileMenuOpen(false);
+      const { error } = await signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+        // ProtectedRoute will handle redirect even on error
+      }
+      // Don't navigate manually - ProtectedRoute will handle redirect automatically
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // ProtectedRoute will handle redirect even on error
+    }
   };
 
   /**
@@ -78,7 +72,7 @@ export const Navbar = () => {
             </Link>
 
             {/* Desktop Navigation - Center */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden md:flex items-center space-x-1 flex-1 justify-center">
               <Link
                 to="/dashboard"
                 className={`px-4 py-2 rounded-xl font-medium transition-colors flex items-center gap-2 ${
@@ -115,38 +109,8 @@ export const Navbar = () => {
             </div>
 
             {/* Desktop User Menu - Right */}
-            <div className="hidden md:block relative" ref={userMenuRef}>
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-warm-700 hover:bg-warm-100 transition-colors"
-              >
-                <User className="h-5 w-5" />
-                <span className="text-sm font-medium">{userEmail}</span>
-              </button>
-
-              {/* User Dropdown */}
-              {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-medium border border-warm-200 py-1">
-                  <div className="px-4 py-2 border-b border-warm-200">
-                    <p className="text-sm font-medium text-warm-900">{userEmail}</p>
-                  </div>
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsUserMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-warm-700 hover:bg-warm-100 transition-colors"
-                  >
-                    <User className="h-4 w-4" />
-                    Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-warm-700 hover:bg-warm-100 transition-colors text-left"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Logout
-                  </button>
-                </div>
-              )}
+            <div className="hidden md:flex items-center">
+              <UserMenu />
             </div>
 
             {/* Mobile Menu Button */}
@@ -219,10 +183,10 @@ export const Navbar = () => {
               <span className="font-medium">My Recipes</span>
             </Link>
             <Link
-              to="/create"
+              to="/recipes/new"
               onClick={() => setIsMobileMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl transition-colors ${
-                isActive('/create')
+                isActive('/recipes/new')
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-warm-700 hover:bg-warm-100'
               }`}
@@ -247,7 +211,7 @@ export const Navbar = () => {
             </Link>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-warm-700 hover:bg-warm-100 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-red-600 hover:bg-red-50 transition-colors text-left"
             >
               <LogOut className="h-5 w-5" />
               <span className="font-medium">Logout</span>
