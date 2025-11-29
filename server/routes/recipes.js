@@ -4,14 +4,18 @@ import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Get Supabase config
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
-
 /**
  * Helper function to create Supabase client with user's token
  */
 const getSupabaseClient = (req) => {
+  // Get environment variables inside the function to ensure they're loaded
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase configuration is missing. Please check your environment variables.');
+  }
+  
   const token = req.headers.authorization?.substring(7); // Remove 'Bearer ' prefix
   return createClient(supabaseUrl, supabaseKey, {
     global: {
@@ -146,9 +150,24 @@ router.get('/:id', async (req, res) => {
  * Create new recipe with ingredients
  */
 router.post('/', async (req, res) => {
+  console.log('🔍 [SERVER]', '=== POST /api/recipes RECEIVED ===');
+  console.log('🔍 [SERVER]', 'Request method:', req.method);
+  console.log('🔍 [SERVER]', 'Request URL:', req.url);
+  console.log('🔍 [SERVER]', 'Request headers:', {
+    'content-type': req.headers['content-type'],
+    'authorization': req.headers.authorization ? `${req.headers.authorization.substring(0, 30)}...` : 'missing',
+  });
+  console.log('🔍 [SERVER]', 'Request body (raw):', req.body);
+  console.log('🔍 [SERVER]', 'Request body type:', typeof req.body);
+  
   try {
+    console.log('🔍 [SERVER]', '🔑 Getting Supabase client...');
     const supabase = getSupabaseClient(req);
+    console.log('🔍 [SERVER]', '✅ Supabase client created');
+    
+    console.log('🔍 [SERVER]', '👤 Authenticated user:', req.user);
     const userId = req.user.id;
+    console.log('🔍 [SERVER]', 'User ID:', userId);
 
     const {
       title,
@@ -161,9 +180,29 @@ router.post('/', async (req, res) => {
       ingredients = []
     } = req.body;
 
+    console.log('🔍 [SERVER]', '📦 Extracted recipe data:', {
+      title,
+      description,
+      prep_time,
+      cook_time,
+      servings,
+      difficulty,
+      image_url,
+      ingredientsCount: ingredients.length,
+    });
+
     // Validate required fields
+    console.log('🔍 [SERVER]', '🔍 Validating required fields...');
     if (!title || prep_time === undefined || cook_time === undefined || 
         servings === undefined || !difficulty) {
+      console.error('🔍 [SERVER]', '❌ Validation failed: Missing required fields');
+      console.error('🔍 [SERVER]', 'Missing fields:', {
+        title: !title,
+        prep_time: prep_time === undefined,
+        cook_time: cook_time === undefined,
+        servings: servings === undefined,
+        difficulty: !difficulty,
+      });
       return res.status(400).json({
         error: {
           message: 'Missing required fields: title, prep_time, cook_time, servings, difficulty'
@@ -172,7 +211,9 @@ router.post('/', async (req, res) => {
     }
 
     // Validate difficulty
+    console.log('🔍 [SERVER]', '🔍 Validating difficulty...');
     if (!['easy', 'medium', 'hard'].includes(difficulty)) {
+      console.error('🔍 [SERVER]', '❌ Validation failed: Invalid difficulty:', difficulty);
       return res.status(400).json({
         error: {
           message: 'Invalid difficulty. Must be: easy, medium, or hard'
@@ -180,28 +221,48 @@ router.post('/', async (req, res) => {
       });
     }
 
+    console.log('🔍 [SERVER]', '✅ Validation passed');
+    console.log('🔍 [SERVER]', '📝 Preparing recipe insert data...');
+    
+    const recipeInsertData = {
+      user_id: userId,
+      title,
+      description: description || null,
+      prep_time,
+      cook_time,
+      servings,
+      difficulty,
+      image_url: image_url || null
+    };
+    
+    console.log('🔍 [SERVER]', 'Recipe insert data:', recipeInsertData);
+
     // Insert recipe
+    console.log('🔍 [SERVER]', '📤 Inserting recipe into database...');
     const { data: recipe, error: recipeError } = await supabase
       .from('recipes')
-      .insert({
-        user_id: userId,
-        title,
-        description: description || null,
-        prep_time,
-        cook_time,
-        servings,
-        difficulty,
-        image_url: image_url || null
-      })
+      .insert(recipeInsertData)
       .select()
       .single();
 
     if (recipeError) {
+      console.error('🔍 [SERVER]', '❌ Recipe insert error:', recipeError);
+      console.error('🔍 [SERVER]', 'Error code:', recipeError.code);
+      console.error('🔍 [SERVER]', 'Error message:', recipeError.message);
+      console.error('🔍 [SERVER]', 'Error details:', recipeError.details);
       throw recipeError;
     }
 
+    console.log('🔍 [SERVER]', '✅ Recipe inserted successfully');
+    console.log('🔍 [SERVER]', 'Created recipe:', recipe);
+    console.log('🔍 [SERVER]', 'Recipe ID:', recipe.id);
+
     // Insert ingredients if provided
     if (ingredients.length > 0) {
+      console.log('🔍 [SERVER]', '📦 Processing ingredients...');
+      console.log('🔍 [SERVER]', 'Ingredients count:', ingredients.length);
+      console.log('🔍 [SERVER]', 'Ingredients data:', ingredients);
+      
       const ingredientsData = ingredients.map((ing, index) => ({
         recipe_id: recipe.id,
         name: ing.name,
@@ -210,26 +271,48 @@ router.post('/', async (req, res) => {
         order_index: ing.order_index !== undefined ? ing.order_index : index
       }));
 
+      console.log('🔍 [SERVER]', '📤 Inserting ingredients into database...');
+      console.log('🔍 [SERVER]', 'Ingredients insert data:', ingredientsData);
+      
       const { error: ingredientsError } = await supabase
         .from('ingredients')
         .insert(ingredientsData);
 
       if (ingredientsError) {
+        console.error('🔍 [SERVER]', '❌ Ingredients insert error:', ingredientsError);
+        console.error('🔍 [SERVER]', 'Error code:', ingredientsError.code);
+        console.error('🔍 [SERVER]', 'Error message:', ingredientsError.message);
+        console.error('🔍 [SERVER]', 'Error details:', ingredientsError.details);
+        console.log('🔍 [SERVER]', '🔄 Rolling back: Deleting recipe...');
         // If ingredients fail, delete the recipe (rollback)
         await supabase.from('recipes').delete().eq('id', recipe.id);
         throw ingredientsError;
       }
 
+      console.log('🔍 [SERVER]', '✅ Ingredients inserted successfully');
+      
       // Fetch inserted ingredients
+      console.log('🔍 [SERVER]', '📥 Fetching inserted ingredients...');
       const insertedIngredients = await fetchIngredients(supabase, recipe.id);
+      console.log('🔍 [SERVER]', 'Fetched ingredients:', insertedIngredients);
       recipe.ingredients = insertedIngredients;
     } else {
+      console.log('🔍 [SERVER]', 'ℹ️ No ingredients provided, setting empty array');
       recipe.ingredients = [];
     }
 
+    console.log('🔍 [SERVER]', '✅ Recipe creation completed successfully');
+    console.log('🔍 [SERVER]', 'Final recipe object:', recipe);
+    console.log('🔍 [SERVER]', '📤 Sending response with status 201');
+    
     res.status(201).json(recipe);
   } catch (error) {
-    console.error('Error creating recipe:', error);
+    console.error('🔍 [SERVER]', '💥 Error creating recipe:', error);
+    console.error('🔍 [SERVER]', 'Error name:', error.name);
+    console.error('🔍 [SERVER]', 'Error message:', error.message);
+    console.error('🔍 [SERVER]', 'Error stack:', error.stack);
+    console.error('🔍 [SERVER]', 'Error code:', error.code);
+    console.error('🔍 [SERVER]', 'Error details:', error.details);
     res.status(500).json({
       error: {
         message: 'Failed to create recipe',

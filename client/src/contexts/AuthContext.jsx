@@ -42,25 +42,79 @@ export const AuthProvider = ({ children }) => {
    * Sign up a new user
    */
   const signUp = useCallback(async (email, password) => {
+    // 6. Log at START of signUp function in AuthContext
+    console.log('🔍 [AuthContext]', '=== SIGNUP FUNCTION CALLED ===', new Date().toISOString());
+    console.log('🔍 [AuthContext]', 'Email:', email);
+    console.log('🔍 [AuthContext]', 'Password:', password ? '*'.repeat(password.length) : '(empty)');
+    
     try {
+      console.log('🔍 [AuthContext]', '📝 Setting loading to true');
       setLoading(true);
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
+      
+      // 6. Log BEFORE calling supabase.auth.signUp
+      console.log('🔍 [AuthContext]', '📞 Calling supabase.auth.signUp...');
+      console.log('🔍 [AuthContext]', 'Supabase client:', supabase);
+      console.log('🔍 [AuthContext]', 'supabase.auth:', supabase.auth);
+      
+      // Validate email and password for non-ASCII characters
+      const emailHasNonASCII = /[^\x00-\x7F]/.test(email);
+      const passwordHasNonASCII = /[^\x00-\x7F]/.test(password);
+      console.log('🔍 [AuthContext]', 'Email contains non-ASCII:', emailHasNonASCII);
+      console.log('🔍 [AuthContext]', 'Password contains non-ASCII:', passwordHasNonASCII);
+      
+      // Ensure email and password are properly encoded
+      const encodedEmail = encodeURIComponent(email);
+      const signUpParams = {
+        email: email.trim(),
+        password: password,
+      };
+      
+      console.log('🔍 [AuthContext]', 'SignUp parameters:', {
+        email: signUpParams.email,
+        password: '*'.repeat(password.length),
+        emailLength: signUpParams.email.length,
+        passwordLength: password.length,
       });
+      
+      const { data, error } = await supabase.auth.signUp(signUpParams);
+
+      // 6. Log AFTER supabase.auth.signUp returns
+      console.log('🔍 [AuthContext]', '✅ supabase.auth.signUp returned');
+      console.log('🔍 [AuthContext]', 'Complete data object:', data);
+      console.log('🔍 [AuthContext]', 'Complete error object:', error);
+      console.log('🔍 [AuthContext]', 'data.user:', data?.user);
+      console.log('🔍 [AuthContext]', 'data.session:', data?.session);
+      console.log('🔍 [AuthContext]', 'error?.message:', error?.message);
+      console.log('🔍 [AuthContext]', 'error?.status:', error?.status);
 
       if (error) {
+        console.log('🔍 [AuthContext]', '❌ Error exists, throwing error');
         throw error;
       }
 
+      console.log('🔍 [AuthContext]', '✅ No error, setting session and user');
+      console.log('🔍 [AuthContext]', '📝 Setting session to:', data.session);
       setSession(data.session);
+      console.log('🔍 [AuthContext]', '📝 Setting user to:', data.user);
       setUser(data.user);
-      return { user: data.user, session: data.session, error: null };
+      
+      const returnValue = { user: data.user, session: data.session, error: null };
+      console.log('🔍 [AuthContext]', '📤 Returning success result:', returnValue);
+      return returnValue;
     } catch (error) {
-      console.error('Error signing up:', error);
-      return { user: null, session: null, error };
+      console.log('🔍 [AuthContext]', '💥 CATCH BLOCK: Exception caught in signUp');
+      console.error('🔍 [AuthContext]', 'Error object:', error);
+      console.error('🔍 [AuthContext]', 'Error message:', error.message);
+      console.error('🔍 [AuthContext]', 'Error name:', error.name);
+      console.error('🔍 [AuthContext]', 'Error stack:', error.stack);
+      
+      const returnValue = { user: null, session: null, error };
+      console.log('🔍 [AuthContext]', '📤 Returning error result:', returnValue);
+      return returnValue;
     } finally {
+      console.log('🔍 [AuthContext]', '📝 Setting loading to false');
       setLoading(false);
+      console.log('🔍 [AuthContext]', '=== SIGNUP FUNCTION COMPLETED ===');
     }
   }, []);
 
