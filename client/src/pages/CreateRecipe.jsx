@@ -12,40 +12,25 @@ export const CreateRecipe = () => {
    * Handle form submission
    */
   const handleSubmit = async (recipeData) => {
-    console.log('🔍 [CreateRecipe]', '=== HANDLE SUBMIT CALLED ===');
-    console.log('🔍 [CreateRecipe]', 'Received recipe data:', recipeData);
-    console.log('🔍 [CreateRecipe]', 'Recipe data type:', typeof recipeData);
-    console.log('🔍 [CreateRecipe]', 'Recipe data keys:', Object.keys(recipeData));
-    
     try {
-      console.log('🔍 [CreateRecipe]', '📞 Calling createRecipe API function...');
       const createdRecipe = await createRecipe(recipeData);
-      console.log('🔍 [CreateRecipe]', '✅ Recipe created successfully!');
-      console.log('🔍 [CreateRecipe]', 'Created recipe object:', createdRecipe);
-      console.log('🔍 [CreateRecipe]', 'Created recipe ID:', createdRecipe?.id);
       
       // Show success toast
       setToast({
         type: 'success',
         message: 'Recipe created successfully!',
       });
-      console.log('🔍 [CreateRecipe]', '✅ Success toast set');
 
       // Navigate to dashboard after a short delay
       setTimeout(() => {
-        console.log('🔍 [CreateRecipe]', '🚀 Navigating to /dashboard');
         navigate('/dashboard');
       }, 1500);
     } catch (error) {
-      console.error('🔍 [CreateRecipe]', '❌ ERROR creating recipe:', error);
-      console.error('🔍 [CreateRecipe]', 'Error name:', error.name);
-      console.error('🔍 [CreateRecipe]', 'Error message:', error.message);
-      console.error('🔍 [CreateRecipe]', 'Error stack:', error.stack);
+      console.error('Error creating recipe:', error);
       setToast({
         type: 'error',
         message: error.message || 'Failed to create recipe. Please try again.',
       });
-      console.log('🔍 [CreateRecipe]', '❌ Error toast set');
     }
   };
 

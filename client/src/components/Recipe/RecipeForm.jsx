@@ -179,19 +179,13 @@ export const RecipeForm = ({ initialData, onSubmit, onCancel }) => {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('🔍 [RecipeForm]', '=== FORM SUBMITTED ===');
-    console.log('🔍 [RecipeForm]', 'Form data (raw):', formData);
-    
     setErrors({});
 
-    const { isValid, errors: validationErrors } = validateForm();
+    const { isValid } = validateForm();
     if (!isValid) {
-      console.log('🔍 [RecipeForm]', '❌ Form validation failed');
-      console.log('🔍 [RecipeForm]', 'Validation errors:', validationErrors);
       return;
     }
 
-    console.log('🔍 [RecipeForm]', '✅ Form validation passed');
     setIsSubmitting(true);
 
     try {
@@ -204,8 +198,6 @@ export const RecipeForm = ({ initialData, onSubmit, onCancel }) => {
           unit: ing.unit.trim(),
         }));
 
-      console.log('🔍 [RecipeForm]', 'Valid ingredients:', validIngredients);
-
       const recipeData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -217,20 +209,12 @@ export const RecipeForm = ({ initialData, onSubmit, onCancel }) => {
         ingredients: validIngredients,
       };
 
-      console.log('🔍 [RecipeForm]', '📦 Prepared recipe data:', recipeData);
-      console.log('🔍 [RecipeForm]', '📞 Calling onSubmit callback...');
-      
       await onSubmit(recipeData);
-      
-      console.log('🔍 [RecipeForm]', '✅ onSubmit completed successfully');
     } catch (error) {
-      console.error('🔍 [RecipeForm]', '❌ Form submission error:', error);
-      console.error('🔍 [RecipeForm]', 'Error message:', error.message);
-      console.error('🔍 [RecipeForm]', 'Error stack:', error.stack);
+      console.error('Form submission error:', error);
       setErrors({ submit: error.message || 'Failed to save recipe' });
     } finally {
       setIsSubmitting(false);
-      console.log('🔍 [RecipeForm]', '📝 Form submission finished, isSubmitting set to false');
     }
   };
 
