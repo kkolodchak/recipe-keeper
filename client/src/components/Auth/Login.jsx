@@ -6,7 +6,7 @@ import { useToast } from '../../contexts/ToastContext.jsx';
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { signIn, loading: authLoading } = useAuth();
+  const { signIn, signInWithGoogle, loading: authLoading } = useAuth();
   const { showToast } = useToast();
   
   const [email, setEmail] = useState('');
@@ -81,6 +81,30 @@ export const Login = () => {
       showToast(errorMessage, 'error');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  /**
+   * Handle Google OAuth sign-in
+   */
+  const handleGoogleSignIn = async () => {
+    try {
+      setSubmitError('');
+      const { error } = await signInWithGoogle();
+
+      if (error) {
+        const errorMessage = error.message || 'Failed to sign in with Google. Please try again.';
+        setSubmitError(errorMessage);
+        showToast(errorMessage, 'error');
+        return;
+      }
+
+      // OAuth redirects automatically, so we don't navigate here
+      // The callback route will handle the redirect
+    } catch (error) {
+      const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
+      setSubmitError(errorMessage);
+      showToast(errorMessage, 'error');
     }
   };
 
@@ -187,11 +211,12 @@ export const Login = () => {
               </div>
             </div>
 
-            {/* Google Sign In Button (Disabled) */}
+            {/* Google Sign In Button */}
             <button
               type="button"
-              disabled
-              className="w-full bg-white border-2 border-warm-300 text-warm-700 font-semibold py-3 px-4 rounded-xl transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-warm-50"
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="w-full max-w-[152px] bg-white border-2 border-warm-300 text-warm-700 font-semibold py-3 px-4 rounded-xl transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:bg-warm-50"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path

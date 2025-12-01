@@ -7,6 +7,7 @@ import { Navbar } from './components/Layout/Navbar.jsx';
 import { Home } from './pages/Home.jsx';
 import { Login } from './components/Auth/Login.jsx';
 import { SignUp } from './components/Auth/SignUp.jsx';
+import { OAuthCallback } from './components/Auth/OAuthCallback.jsx';
 import { Dashboard } from './pages/Dashboard.jsx';
 import { RecipeDetailPage } from './pages/RecipeDetailPage.jsx';
 import { CreateRecipe } from './pages/CreateRecipe.jsx';
@@ -76,6 +77,9 @@ function App() {
                 </PublicRoute>
               }
             />
+            
+            {/* OAuth Callback Route */}
+            <Route path="/auth/callback" element={<OAuthCallback />} />
 
             {/* Protected Routes with Navbar */}
             <Route element={<ProtectedLayout />}>

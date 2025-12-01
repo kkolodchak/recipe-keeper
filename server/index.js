@@ -28,8 +28,9 @@ const app = express();
 
 // Configure CORS for production and development
 const allowedOrigins = [
-  'http://localhost:5175',
   'http://localhost:5173',
+  'http://localhost:5175',
+  'http://localhost:5176',
   process.env.FRONTEND_URL || 'https://recipe-keeper.vercel.app'
 ];
 
