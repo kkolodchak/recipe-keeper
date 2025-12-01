@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, Users, ChefHat } from 'lucide-react';
 
@@ -7,6 +8,7 @@ import { Clock, Users, ChefHat } from 'lucide-react';
  */
 export const RecipeCard = ({ recipe }) => {
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
 
   if (!recipe) {
     return null;
@@ -29,13 +31,13 @@ export const RecipeCard = ({ recipe }) => {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'easy':
-        return 'bg-fresh-100 text-fresh-700 border-fresh-200';
+        return 'bg-green-100 text-green-700 border-green-200';
       case 'medium':
         return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       case 'hard':
         return 'bg-red-100 text-red-700 border-red-200';
       default:
-        return 'bg-warm-100 text-warm-700 border-warm-200';
+        return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
 
@@ -60,29 +62,22 @@ export const RecipeCard = ({ recipe }) => {
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 cursor-pointer overflow-hidden border border-warm-200 hover:border-primary-300 group"
+      className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200 hover:border-blue-300 group"
     >
       {/* Recipe Image */}
-      <div className="relative w-full aspect-video overflow-hidden bg-warm-100">
-        {image_url ? (
+      <div className="relative w-full aspect-video overflow-hidden bg-gray-100">
+        {image_url && !imageError ? (
           <img
             src={image_url}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            onError={(e) => {
-              // Fallback to placeholder if image fails to load
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
+            onError={() => setImageError(true)}
           />
-        ) : null}
-        <div
-          className={`w-full h-full flex items-center justify-center ${
-            image_url ? 'hidden' : 'flex'
-          }`}
-        >
-          <ChefHat className="h-16 w-16 text-warm-400" />
-        </div>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <ChefHat className="h-16 w-16 text-gray-400" />
+          </div>
+        )}
 
         {/* Difficulty Badge - Overlay on image */}
         {difficulty && (
@@ -99,37 +94,37 @@ export const RecipeCard = ({ recipe }) => {
       </div>
 
       {/* Card Content */}
-      <div className="p-5">
+      <div className="p-4">
         {/* Title */}
-        <h3 className="text-lg font-bold text-warm-900 mb-2 line-clamp-1 group-hover:text-primary-600 transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
           {title || 'Untitled Recipe'}
         </h3>
 
         {/* Description */}
         {description && (
-          <p className="text-sm text-warm-600 mb-4 line-clamp-2">
+          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
             {description}
           </p>
         )}
 
         {/* Recipe Info Row */}
-        <div className="flex items-center justify-between gap-4 text-sm text-warm-600">
+        <div className="flex items-center justify-between gap-4 text-sm text-gray-600">
           {/* Prep Time */}
           <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-warm-400" />
+            <Clock className="h-4 w-4 text-gray-400" />
             <span className="font-medium">{formatTime(prep_time)}</span>
           </div>
 
           {/* Cook Time */}
           <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-warm-400" />
+            <Clock className="h-4 w-4 text-gray-400" />
             <span className="font-medium">{formatTime(cook_time)}</span>
           </div>
 
           {/* Servings */}
           {servings && (
             <div className="flex items-center gap-1.5">
-              <Users className="h-4 w-4 text-warm-400" />
+              <Users className="h-4 w-4 text-gray-400" />
               <span className="font-medium">{servings}</span>
             </div>
           )}

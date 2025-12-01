@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
-  Lock,
   Smartphone,
   ChefHat,
   Plus,
@@ -140,7 +139,7 @@ export const Home = () => {
                   1
                 </div>
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-6">
-                  <Lock className="h-8 w-8 text-primary-600" />
+                  <span className="text-3xl">🔐</span>
                 </div>
                 <h3 className="text-2xl font-bold text-warm-900 mb-4">Sign Up for Free</h3>
                 <p className="text-warm-600 leading-relaxed">

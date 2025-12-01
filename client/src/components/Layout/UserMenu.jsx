@@ -58,20 +58,20 @@ export const UserMenu = () => {
       {/* User Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl text-warm-700 hover:bg-warm-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         aria-label="User menu"
         aria-expanded={isOpen}
         disabled={authLoading}
       >
         {/* User Avatar */}
-        <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
           {userInitial}
         </div>
         <span className="text-sm font-medium hidden sm:inline max-w-[150px] truncate">
           {userEmail}
         </span>
         <ChevronDown
-          className={`h-4 w-4 text-warm-500 transition-transform duration-200 flex-shrink-0 ${
+          className={`h-4 w-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ${
             isOpen ? 'transform rotate-180' : ''
           }`}
         />
@@ -79,11 +79,11 @@ export const UserMenu = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-medium border border-warm-200 py-2 z-50 animate-fade-in">
+        <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50 animate-fade-in">
           {/* User Info */}
-          <div className="px-4 py-3 border-b border-warm-200">
-            <p className="text-xs text-warm-500 mb-1">Signed in as</p>
-            <p className="text-sm font-medium text-warm-900 truncate">{userEmail}</p>
+          <div className="px-4 py-3 border-b border-gray-200">
+            <p className="text-xs text-gray-500 mb-1">Signed in as</p>
+            <p className="text-sm font-medium text-gray-900 truncate">{userEmail}</p>
           </div>
 
           {/* Menu Items */}
@@ -93,14 +93,14 @@ export const UserMenu = () => {
                 setIsOpen(false);
                 navigate('/dashboard');
               }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-warm-700 hover:bg-warm-50 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left"
             >
               <User className="h-4 w-4" />
               <span>My Recipes</span>
             </button>
 
             {/* Divider */}
-            <div className="border-t border-warm-200 my-1" />
+            <div className="border-t border-gray-200 my-1" />
 
             {/* Logout Button */}
             <button

@@ -38,11 +38,11 @@ export const CreateRecipe = () => {
   };
 
   return (
-    <div className="min-h-screen bg-warm-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8">
       {/* Page Header */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <h1 className="text-4xl font-bold text-warm-900">Create New Recipe</h1>
-        <p className="text-warm-600 mt-2">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">Create New Recipe</h1>
+        <p className="text-gray-600 text-lg">
           Fill in the details below to add a new recipe to your collection
         </p>
       </div>

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    margin: 0;
+  }
+}
+
 @layer utilities {
   .animate-slide-in-right {
     animation: slideInRight 0.3s ease-out;

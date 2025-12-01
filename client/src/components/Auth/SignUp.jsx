@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, Loader2, CheckCircle2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 
@@ -228,24 +228,19 @@ export const SignUp = () => {
               <label htmlFor="email" className="block text-sm font-medium text-warm-700 mb-2">
                 Email
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-warm-400" />
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
-                    errors.email
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
-                  }`}
-                  placeholder="you@example.com"
-                  disabled={isLoading}
-                />
-              </div>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
+                  errors.email
+                    ? 'border-red-300 bg-red-50'
+                    : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
+                }`}
+                placeholder="you@example.com"
+                disabled={isLoading}
+              />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
               )}
@@ -256,24 +251,19 @@ export const SignUp = () => {
               <label htmlFor="password" className="block text-sm font-medium text-warm-700 mb-2">
                 Password
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-warm-400" />
-                </div>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
-                    errors.password
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
-                  }`}
-                  placeholder="••••••••"
-                  disabled={isLoading}
-                />
-              </div>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
+                  errors.password
+                    ? 'border-red-300 bg-red-50'
+                    : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
+                }`}
+                placeholder="••••••••"
+                disabled={isLoading}
+              />
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
@@ -284,24 +274,19 @@ export const SignUp = () => {
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-warm-700 mb-2">
                 Confirm Password
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-warm-400" />
-                </div>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
-                    errors.confirmPassword
-                      ? 'border-red-300 bg-red-50'
-                      : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
-                  }`}
-                  placeholder="••••••••"
-                  disabled={isLoading}
-                />
-              </div>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={`block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
+                  errors.confirmPassword
+                    ? 'border-red-300 bg-red-50'
+                    : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
+                }`}
+                placeholder="••••••••"
+                disabled={isLoading}
+              />
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
               )}

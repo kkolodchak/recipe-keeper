@@ -82,10 +82,10 @@ export const RecipeDetailPage = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-warm-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-primary-500 mx-auto mb-4" />
-          <p className="text-warm-600 text-lg">Loading recipe...</p>
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600 text-lg">Loading recipe...</p>
         </div>
       </div>
     );
@@ -94,18 +94,18 @@ export const RecipeDetailPage = () => {
   // Error state
   if (error || !recipe) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-warm-50 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
             <AlertCircle className="h-8 w-8 text-red-600" />
           </div>
-          <h2 className="text-2xl font-bold text-warm-900 mb-2">Recipe Not Found</h2>
-          <p className="text-warm-600 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Recipe Not Found</h2>
+          <p className="text-gray-600 mb-6">
             {error || 'The recipe you are looking for does not exist or you do not have access to it.'}
           </p>
           <button
             onClick={() => navigate('/dashboard')}
-            className="px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 transition-colors"
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
           >
             Back to Dashboard
           </button>
@@ -115,7 +115,7 @@ export const RecipeDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-warm-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Recipe Detail Component */}
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <RecipeDetail
@@ -129,10 +129,10 @@ export const RecipeDetailPage = () => {
       {/* Loading overlay for delete */}
       {isDeleting && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-medium p-6 max-w-sm w-full mx-4">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full mx-4 border border-gray-200">
             <div className="flex items-center gap-4">
-              <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
-              <p className="text-warm-900 font-medium">Deleting recipe...</p>
+              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+              <p className="text-gray-900 font-medium">Deleting recipe...</p>
             </div>
           </div>
         </div>
