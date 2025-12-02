@@ -59,63 +59,31 @@ export const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // 1. Log at START of handleSubmit
-    console.log('🔍 [SignUp]', '=== SIGNUP FORM SUBMITTED ===', new Date().toISOString());
-    console.log('🔍 [SignUp]', 'Email:', email);
-    console.log('🔍 [SignUp]', 'Password:', password ? '*'.repeat(password.length) : '(empty)');
-    
     setSubmitError('');
     setErrors({});
     setShowSuccess(false);
   
     // Validate form
     const isValid = validateForm();
-    console.log('🔍 [SignUp]', 'Form validation result:', isValid);
-    console.log('🔍 [SignUp]', 'Validation errors:', errors);
     
     if (!isValid) {
-      console.log('🔍 [SignUp]', '❌ Form validation failed, returning early');
       return;
     }
   
-    // 5. Log state change: setIsSubmitting
-    console.log('🔍 [SignUp]', '📝 Setting isSubmitting to true');
     setIsSubmitting(true);
   
     try {
-      // 2. Log BEFORE calling signUp
-      console.log('🔍 [SignUp]', '📞 Calling signUp function...');
-      console.log('🔍 [SignUp]', 'signUp function exists:', typeof signUp === 'function');
-      console.log('🔍 [SignUp]', 'signUp function:', signUp);
-      
       // signUp returns { user, session, error }
       const result = await signUp(email, password);
       
-      // 3. Log AFTER signUp returns
-      console.log('🔍 [SignUp]', '✅ SignUp function returned:');
-      console.log('🔍 [SignUp]', 'Complete result object:', result);
-      
       const { user, session, error } = result;
-      console.log('🔍 [SignUp]', 'Destructured user:', user);
-      console.log('🔍 [SignUp]', 'Destructured session:', session);
-      console.log('🔍 [SignUp]', 'Destructured error:', error);
   
-      // 4. Log in EVERY conditional branch
       if (error) {
-        console.log('🔍 [SignUp]', '❌ ERROR BRANCH: Error exists');
-        console.log('🔍 [SignUp]', 'Error details:', error);
-        console.log('🔍 [SignUp]', 'Error message:', error.message);
-        
-        // Show error first
         const errorMessage = error.message || 'Failed to create account. Please try again.';
-        console.log('🔍 [SignUp]', '📝 Setting submitError to:', errorMessage);
         setSubmitError(errorMessage);
-        
-        console.log('🔍 [SignUp]', '📝 Setting isSubmitting to false');
         setIsSubmitting(false);
         
         // Clear form fields after showing error
-        console.log('🔍 [SignUp]', '🧹 Clearing form fields');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
@@ -124,19 +92,11 @@ export const SignUp = () => {
   
       // Check if email confirmation is needed
       if (user && !session) {
-        console.log('🔍 [SignUp]', '⚠️ EMAIL CONFIRMATION BRANCH: User exists but no session');
-        console.log('🔍 [SignUp]', 'User:', user);
-        console.log('🔍 [SignUp]', 'Session:', session);
-        
         const confirmationMessage = 'Please check your email to confirm your account before signing in.';
-        console.log('🔍 [SignUp]', '📝 Setting submitError to:', confirmationMessage);
         setSubmitError(confirmationMessage);
-        
-        console.log('🔍 [SignUp]', '📝 Setting isSubmitting to false');
         setIsSubmitting(false);
         
         // Clear form fields after showing error
-        console.log('🔍 [SignUp]', '🧹 Clearing form fields');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
@@ -145,40 +105,22 @@ export const SignUp = () => {
   
       // Success - user is logged in
       if (user && session) {
-        console.log('🔍 [SignUp]', '✅ SUCCESS BRANCH: User and session both exist');
-        console.log('🔍 [SignUp]', 'User:', user);
-        console.log('🔍 [SignUp]', 'Session:', session);
-        
-        console.log('🔍 [SignUp]', '📝 Setting showSuccess to true');
         setShowSuccess(true);
         
-        console.log('🔍 [SignUp]', '⏱️ Scheduling navigation to /dashboard in 1500ms');
         // Redirect to dashboard after a short delay
         setTimeout(() => {
-          console.log('🔍 [SignUp]', '🚀 Navigating to /dashboard');
           navigate('/dashboard');
         }, 1500);
-      } else {
-        console.log('🔍 [SignUp]', '⚠️ UNEXPECTED STATE: No user or session');
-        console.log('🔍 [SignUp]', 'User:', user);
-        console.log('🔍 [SignUp]', 'Session:', session);
       }
     } catch (error) {
-      console.log('🔍 [SignUp]', '💥 CATCH BLOCK: Exception caught');
-      console.error('🔍 [SignUp]', 'Error object:', error);
-      console.error('🔍 [SignUp]', 'Error message:', error.message);
-      console.error('🔍 [SignUp]', 'Error stack:', error.stack);
+      console.error('Error during sign up:', error);
       
       // Show error first
       const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
-      console.log('🔍 [SignUp]', '📝 Setting submitError to:', errorMessage);
       setSubmitError(errorMessage);
-      
-      console.log('🔍 [SignUp]', '📝 Setting isSubmitting to false');
       setIsSubmitting(false);
       
       // Clear form fields after showing error
-      console.log('🔍 [SignUp]', '🧹 Clearing form fields');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
