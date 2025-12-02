@@ -7,7 +7,7 @@ import { UserMenu } from './UserMenu.jsx';
 export const Navbar = () => {
   const location = useLocation();
   const { user, signOut } = useAuth();
-  
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef(null);
 

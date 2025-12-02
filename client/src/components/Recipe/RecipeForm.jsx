@@ -57,7 +57,6 @@ export const RecipeForm = ({ initialData, onSubmit, onCancel }) => {
       ...prev,
       [field]: value,
     }));
-    // Clear error for this field
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev };

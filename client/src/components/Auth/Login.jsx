@@ -8,7 +8,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const { signIn, signInWithGoogle, loading: authLoading } = useAuth();
   const { showToast } = useToast();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});

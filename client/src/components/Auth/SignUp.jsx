@@ -8,7 +8,7 @@ export const SignUp = () => {
   const navigate = useNavigate();
   const { signUp, signInWithGoogle, loading: authLoading } = useAuth();
   const { showToast } = useToast();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -58,69 +58,55 @@ export const SignUp = () => {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     setSubmitError('');
     setErrors({});
     setShowSuccess(false);
-  
+
     // Validate form
     const isValid = validateForm();
-    
+
     if (!isValid) {
       return;
     }
-  
+
     setIsSubmitting(true);
-  
+
     try {
-      // signUp returns { user, session, error }
       const result = await signUp(email, password);
-      
       const { user, session, error } = result;
-  
+
       if (error) {
         const errorMessage = error.message || 'Failed to create account. Please try again.';
         setSubmitError(errorMessage);
         setIsSubmitting(false);
-        
-        // Clear form fields after showing error
         setEmail('');
         setPassword('');
         setConfirmPassword('');
         return;
       }
-  
-      // Check if email confirmation is needed
+
       if (user && !session) {
         const confirmationMessage = 'Please check your email to confirm your account before signing in.';
         setSubmitError(confirmationMessage);
         setIsSubmitting(false);
-        
-        // Clear form fields after showing error
         setEmail('');
         setPassword('');
         setConfirmPassword('');
         return;
       }
-  
-      // Success - user is logged in
+
       if (user && session) {
         setShowSuccess(true);
-        
-        // Redirect to dashboard after a short delay
         setTimeout(() => {
           navigate('/dashboard');
         }, 1500);
       }
     } catch (error) {
       console.error('Error during sign up:', error);
-      
-      // Show error first
       const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
       setSubmitError(errorMessage);
       setIsSubmitting(false);
-      
-      // Clear form fields after showing error
       setEmail('');
       setPassword('');
       setConfirmPassword('');
