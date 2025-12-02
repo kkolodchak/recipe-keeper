@@ -137,7 +137,7 @@ export const EditRecipe = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 mx-[22px]">
       {/* Page Header */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Edit Recipe</h1>

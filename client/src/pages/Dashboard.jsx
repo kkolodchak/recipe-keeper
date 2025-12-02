@@ -89,18 +89,18 @@ export const Dashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 mx-[22px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-[15px]">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">My Recipes</h1>
-              <p className="text-gray-600 text-lg">Manage and organize your favorite recipes</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-2 text-center">My Recipes</h1>
+              <p className="text-gray-600 text-lg text-center -mt-5 font-[cursive] text-[#6c6c9f]">Manage and organize your favorite recipes</p>
             </div>
             <button
               onClick={handleCreateRecipe}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm self-start sm:self-auto"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#ffff664a] text-white font-medium rounded-[5px] hover:bg-blue-700 transition-colors shadow-sm self-start sm:self-auto align-middle border border-[#e7e63a] font-[ui-monospace] min-h-[39px] text-base"
             >
               <Plus className="h-5 w-5" />
               <span>Create Recipe</span>
@@ -108,7 +108,7 @@ export const Dashboard = () => {
           </div>
 
           {/* Search and Filter Bar */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-row gap-[10px] max-w-[400px]">
             {/* Search Bar */}
             <div className="flex-1 relative">
               <input
@@ -116,7 +116,7 @@ export const Dashboard = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search recipes..."
-                className="block w-full px-4 py-3 border border-gray-300 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400 shadow-sm"
+                className="block w-full px-4 py-3 border border-gray-300 bg-white rounded-[5px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400 shadow-sm min-h-[25px]"
               />
             </div>
 
@@ -125,7 +125,7 @@ export const Dashboard = () => {
               <select
                 value={difficultyFilter}
                 onChange={(e) => setDifficultyFilter(e.target.value)}
-                className="block w-full px-4 py-3 border border-gray-300 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 appearance-none cursor-pointer shadow-sm"
+                className="block w-full px-4 py-3 border border-gray-300 bg-white rounded-[5px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 appearance-none cursor-pointer shadow-sm min-h-[25px] min-w-[96px] text-center font-black"
               >
                 <option value="all">All Difficulties</option>
                 <option value="easy">Easy</option>

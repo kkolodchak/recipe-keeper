@@ -61,12 +61,12 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <nav className="sticky top-0 z-50 bg-[#ffff661c] border-b border-gray-200 shadow-sm -mt-[9px]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 m-[9px]">
+          <div className="flex items-center justify-between h-16 mx-[4vw]">
             {/* Logo - Left */}
             <Link to="/dashboard" className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+              <span className="text-[33px] font-bold text-[#504fb5] hover:text-blue-700 transition-colors font-[cursive]">
                 Recipe Keeper 🍳
               </span>
             </Link>
@@ -140,7 +140,7 @@ export const Navbar = () => {
       {/* Mobile Slide-in Menu */}
       <div
         ref={mobileMenuRef}
-        className={`fixed top-0 left-0 h-full w-64 bg-[#f6dbb7f2] shadow-lg z-50 transform transition-transform duration-300 ease-in-out md:hidden overflow-hidden -ml-2 min-w-[181px] ${
+        className={`fixed top-0 left-0 h-full w-64 bg-[#fffbcbf5] shadow-lg z-50 transform transition-transform duration-300 ease-in-out md:hidden overflow-hidden -ml-2 min-w-[187px] ${
           isMobileMenuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'
         }`}
       >
@@ -197,7 +197,7 @@ export const Navbar = () => {
           </div>
 
           {/* Mobile User Section */}
-          <div className="border-t border-gray-200 p-4 mb-[60px]">
+          <div className="border-t border-gray-200 p-[15px] mb-[81px]">
             <div className="mb-3 px-4">
               <p className="text-sm font-medium text-gray-900">{userEmail}</p>
             </div>
