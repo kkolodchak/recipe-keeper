@@ -76,7 +76,7 @@ export const RecipeCard = ({ recipe }) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <ChefHat className="h-16 w-16 text-gray-400" />
-          </div>
+        </div>
         )}
 
         {/* Difficulty Badge - Overlay on image */}

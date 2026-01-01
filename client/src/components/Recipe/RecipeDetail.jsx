@@ -127,7 +127,7 @@ export const RecipeDetail = ({ recipe, onEdit, onDelete, isOwner = false }) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200">
             <ChefHat className="h-24 w-24 text-blue-400" />
-          </div>
+        </div>
         )}
         
         {/* Title Overlay */}

@@ -8,16 +8,16 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
  */
 const getAuthToken = async () => {
   const { data: { session }, error } = await supabase.auth.getSession();
-
+  
   if (error) {
     console.error('Error getting session:', error);
     throw new Error(`Failed to get session: ${error.message}`);
   }
-
+  
   if (!session || !session.access_token) {
     throw new Error('No active session. Please log in.');
   }
-
+  
   return session.access_token;
 };
 
@@ -26,29 +26,35 @@ const getAuthToken = async () => {
  */
 const apiRequest = async (endpoint, options = {}) => {
   try {
+    // Get auth token
     const token = await getAuthToken();
-
+    
+    // Prepare headers
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
       ...options.headers,
     };
-
+    
+    // Make request
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       headers,
     });
-
+    
+    // Parse JSON response
     const data = await response.json();
-
+    
+    // Handle errors
     if (!response.ok) {
       const errorMessage = data.error?.message || data.error || `HTTP error! status: ${response.status}`;
       console.error('API request failed:', errorMessage);
       throw new Error(errorMessage);
     }
-
+    
     return data;
   } catch (error) {
+    // Re-throw with meaningful message
     if (error instanceof TypeError && error.message.includes('fetch')) {
       throw new Error('Network error: Unable to connect to the server');
     }
@@ -112,7 +118,7 @@ export const createRecipe = async (recipeData) => {
   if (!['easy', 'medium', 'hard'].includes(recipeData.difficulty)) {
     throw new Error('Difficulty must be: easy, medium, or hard');
   }
-
+  
   return apiRequest('/api/recipes', {
     method: 'POST',
     body: JSON.stringify(recipeData),
@@ -129,11 +135,12 @@ export const updateRecipe = async (id, recipeData) => {
   if (!id) {
     throw new Error('Recipe ID is required');
   }
-
+  
+  // Validate difficulty if provided
   if (recipeData.difficulty && !['easy', 'medium', 'hard'].includes(recipeData.difficulty)) {
     throw new Error('Difficulty must be: easy, medium, or hard');
   }
-
+  
   return apiRequest(`/api/recipes/${id}`, {
     method: 'PUT',
     body: JSON.stringify(recipeData),

@@ -19,14 +19,14 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const { data: { session }, error } = await supabase.auth.getSession();
-
+      
       if (error) {
         console.error('Error getting session:', error);
         setUser(null);
         setSession(null);
         return;
       }
-
+      
       setSession(session);
       setUser(session?.user ?? null);
     } catch (error) {
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
       setSession(data.session);
       setUser(data.user);
-
+      
       return { user: data.user, session: data.session, error: null };
     } catch (error) {
       console.error('Error signing up:', error);

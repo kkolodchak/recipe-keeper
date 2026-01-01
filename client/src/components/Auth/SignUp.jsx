@@ -8,7 +8,7 @@ export const SignUp = () => {
   const navigate = useNavigate();
   const { signUp, signInWithGoogle, loading: authLoading } = useAuth();
   const { showToast } = useToast();
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -58,55 +58,69 @@ export const SignUp = () => {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     setSubmitError('');
     setErrors({});
     setShowSuccess(false);
-
+  
     // Validate form
     const isValid = validateForm();
-
+    
     if (!isValid) {
       return;
     }
-
+  
     setIsSubmitting(true);
-
+  
     try {
+      // signUp returns { user, session, error }
       const result = await signUp(email, password);
+      
       const { user, session, error } = result;
-
+  
       if (error) {
         const errorMessage = error.message || 'Failed to create account. Please try again.';
         setSubmitError(errorMessage);
         setIsSubmitting(false);
+        
+        // Clear form fields after showing error
         setEmail('');
         setPassword('');
         setConfirmPassword('');
         return;
       }
-
+  
+      // Check if email confirmation is needed
       if (user && !session) {
         const confirmationMessage = 'Please check your email to confirm your account before signing in.';
         setSubmitError(confirmationMessage);
         setIsSubmitting(false);
+        
+        // Clear form fields after showing error
         setEmail('');
         setPassword('');
         setConfirmPassword('');
         return;
       }
-
+  
+      // Success - user is logged in
       if (user && session) {
         setShowSuccess(true);
+        
+        // Redirect to dashboard after a short delay
         setTimeout(() => {
           navigate('/dashboard');
         }, 1500);
       }
     } catch (error) {
       console.error('Error during sign up:', error);
+      
+      // Show error first
       const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
       setSubmitError(errorMessage);
       setIsSubmitting(false);
+      
+      // Clear form fields after showing error
       setEmail('');
       setPassword('');
       setConfirmPassword('');
@@ -156,19 +170,19 @@ export const SignUp = () => {
               <label htmlFor="email" className="block text-sm font-medium text-warm-700 mb-2">
                 Email
               </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 className={`block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
-                  errors.email
-                    ? 'border-red-300 bg-red-50'
-                    : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
-                }`}
-                placeholder="you@example.com"
-                disabled={isLoading}
-              />
+                    errors.email
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
+                  }`}
+                  placeholder="you@example.com"
+                  disabled={isLoading}
+                />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
               )}
@@ -179,19 +193,19 @@ export const SignUp = () => {
               <label htmlFor="password" className="block text-sm font-medium text-warm-700 mb-2">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 className={`block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
-                  errors.password
-                    ? 'border-red-300 bg-red-50'
-                    : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
-                }`}
-                placeholder="••••••••"
-                disabled={isLoading}
-              />
+                    errors.password
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
+                  }`}
+                  placeholder="••••••••"
+                  disabled={isLoading}
+                />
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
@@ -202,19 +216,19 @@ export const SignUp = () => {
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-warm-700 mb-2">
                 Confirm Password
               </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 className={`block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
-                  errors.confirmPassword
-                    ? 'border-red-300 bg-red-50'
-                    : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
-                }`}
-                placeholder="••••••••"
-                disabled={isLoading}
-              />
+                    errors.confirmPassword
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-warm-300 bg-warm-50 text-warm-900 placeholder-warm-400'
+                  }`}
+                  placeholder="••••••••"
+                  disabled={isLoading}
+                />
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
               )}

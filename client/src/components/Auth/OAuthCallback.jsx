@@ -29,20 +29,30 @@ export const OAuthCallback = () => {
           console.error('OAuth error in URL:', errorParam, errorDescription);
           setError(errorMessage);
           showToast('Failed to sign in with Google. Please try again.', 'error');
+          
+          // Clean up the URL
           window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Redirect to login after a short delay
           setTimeout(() => {
             navigate('/login', { replace: true });
           }, 2000);
           return;
         }
 
+        // Get the session from the URL hash
+        // Supabase stores OAuth tokens in the URL hash after redirect
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
         if (sessionError) {
           console.error('Error getting session:', sessionError);
           setError(sessionError.message || 'Failed to authenticate. Please try again.');
           showToast('Failed to sign in with Google. Please try again.', 'error');
+          
+          // Clean up the URL
           window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Redirect to login after a short delay
           setTimeout(() => {
             navigate('/login', { replace: true });
           }, 2000);
@@ -50,13 +60,23 @@ export const OAuthCallback = () => {
         }
 
         if (session) {
+          // Successfully authenticated
           showToast('Successfully signed in with Google!', 'success');
+          
+          // Clean up the URL hash
           window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Redirect to dashboard
           navigate('/dashboard', { replace: true });
         } else {
+          // No session found - might be an error or user cancelled
           setError('Authentication failed. Please try again.');
           showToast('Failed to sign in with Google. Please try again.', 'error');
+          
+          // Clean up the URL
           window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Redirect to login after a short delay
           setTimeout(() => {
             navigate('/login', { replace: true });
           }, 2000);
@@ -65,7 +85,11 @@ export const OAuthCallback = () => {
         console.error('Error handling OAuth callback:', error);
         setError(error.message || 'An unexpected error occurred. Please try again.');
         showToast('Failed to sign in with Google. Please try again.', 'error');
+        
+        // Clean up the URL
         window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Redirect to login after a short delay
         setTimeout(() => {
           navigate('/login', { replace: true });
         }, 2000);
